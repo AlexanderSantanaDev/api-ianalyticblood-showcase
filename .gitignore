@@ -1,0 +1,27 @@
+# Entorno virtual de Python
+venv/
+.venv/
+env/
+.env
+
+# Archivos de Python generados
+*.pyc
+__pycache__/
+
+# Logs
+*.log
+
+# Carpetas de subida de archivos (si no quieres trackear los archivos individuales)
+uploads/
+
+# Archivos de Docker (opcional, si no quieres trackear construcciones locales)
+docker-compose.override.yml
+
+# Archivos de sistema operativo (comunes)
+.DS_Store
+Thumbs.db
+
+# Otros archivos o carpetas que quieras ignorar específicamente
+# Ejemplo: archivos de configuración local, bases de datos locales, etc.
+# local_config.ini
+# data/local.db
