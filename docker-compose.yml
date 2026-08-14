@@ -4,6 +4,7 @@ services:
     ports:
       - "8000:8000"
     environment:
+      #- MONGO_URI=mongodb+srv://ianalyticblood:OlTwly1dEzejqojQ@cluster0.eiog5sb.mongodb.net/ianalyticblood?retryWrites=true&w=majority&appName=Cluster0
       - MONGO_URI=mongodb://mongo:27017/ianalyticblood
       - UPLOAD_DIR=/app/uploads
       - HTTP_PROXY=

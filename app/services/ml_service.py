@@ -28,17 +28,27 @@ async def analyze_with_deepseek(text: str, plan: str = "free") -> dict:
     logger.info(f"Enviando análisis a DeepSeek (async) - Plan: {plan}")
 
     # Adaptación del prompt según el plan
-    if plan == "free":
-        interpretation_instruction = "Realiza una interpretación BÁSICA y MUY BREVE de los resultados. Devuelve una lista vacía `[]` para recommendations."
-    else:
-        interpretation_instruction = "Realiza un análisis EXHAUSTIVO, detallado y profesional. Proporciona recomendaciones personalizadas y accionables para mejorar los biomarcadores fuera de rango."
+    if plan == "free": interpretation_instruction = """
+    Realiza un análisis REAL y basado en los datos extraídos del informe.
+    Genera las secciones del análisis con viñetas concretas y personalizadas.
+    Devuelve una lista vacía `[]` para recommendations y analysis.
+    """
+    else: interpretation_instruction = "Realiza un análisis EXHAUSTIVO, detallado y profesional. Proporciona recomendaciones personalizadas y accionables para mejorar los biomarcadores fuera de rango."
 
-    prompt = f"""
-# 🔒 PROMPT PROTEGIDO POR DERECHOS DE AUTOR
-# El algoritmo exacto y las instrucciones clínicas de extracción para DeepSeek
-# no se exponen en este repositorio público para proteger la propiedad intelectual.
-[REDACTED: Proprietary clinical data extraction and analysis instructions]
-"""
+    # La estructura del prompt JSON cambia según el plan para evitar enviar
+    # datos de más al cliente no autenticado y mantener segmentación de datos.
+    if plan == "free":
+        # Prompt exclusivo para preview — datos reales en lenguaje claro y accesible.
+        # El prompt de IA de extracción (Plan Básico) ha sido ofuscado para proteger la propiedad intelectual del proyecto.
+        prompt = f"""
+        [PROMPT_FREE_OMITIDO_POR_SEGURIDAD]
+        """
+    else:
+        # Prompt para usuarios con cuenta (free/premium) 
+        # El prompt de IA de extracción (Plan Premium) ha sido ofuscado para proteger la propiedad intelectual del proyecto.
+        prompt = f"""
+        [PROMPT_PREMIUM_OMITIDO_POR_SEGURIDAD]
+        """
 
     logger.debug(f"Prompt enviado a DeepSeek: {prompt[:150]}...")
     try:
@@ -60,6 +70,9 @@ async def analyze_with_deepseek(text: str, plan: str = "free") -> dict:
         # setdefault garantiza la clave sin sobrescribir si ya viene informada.
         analysis_dict.setdefault("recommendations", [])
         analysis_dict.setdefault("analysis", [])
+        # Fallback defensivo para analysis_sections — si DeepSeek lo omite
+        # en el plan "free", el builder de upload.py simplemente devuelve lista vacía.
+        analysis_dict.setdefault("analysis_sections", [])
         logger.info("Respuesta recibida de DeepSeek correctamente")
         return analysis_dict
     except Exception as e:

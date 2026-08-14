@@ -25,7 +25,23 @@ async def ensure_indexes():
     await db.users.create_index("email", unique=True)
     # Índice en users.stripe_customer_id — usado en webhooks de Stripe
     await db.users.create_index("stripe_customer_id", sparse=True)
+    # Índice en preview_usage.ip_address — usado para rastrear uso de análisis gratuito sin registro
+    await db.preview_usage.create_index("ip_address", unique=True)
     logger.info("✅ Índices de MongoDB creados/verificados")
+
+async def check_ip_preview_usage(ip: str) -> bool:
+    """ Verifica si una IP ya ha utilizado su prueba gratuita. """
+    record = await db.preview_usage.find_one({"ip_address": ip})
+    return record is not None
+
+async def mark_ip_preview_used(ip: str) -> None:
+    """ Marca una IP como que ya ha utilizado su prueba gratuita. """
+    await db.preview_usage.update_one(
+        {"ip_address": ip},
+        {"$setOnInsert": {"ip_address": ip, "used_at": datetime.utcnow()}},
+        upsert=True
+    )
+
 
 async def get_user_by_email(email: str) -> dict:
     """ Función para obtener un usuario por email. """

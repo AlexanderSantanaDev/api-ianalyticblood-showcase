@@ -7,18 +7,17 @@ import logging
 logger = logging.getLogger("app.chat_service")
 
 # Prompt del sistema especializado para IAnalytic Blood 
+# El prompt del sistema ha sido ofuscado para el repositorio público.
+# Aquí irían las instrucciones detalladas del comportamiento del LLM (reglas de oro, anti-jailbreak, formato, personalidad).
 SYSTEM_PROMPT = """
-# 🔒 PROMPT PROTEGIDO POR DERECHOS DE AUTOR
-# El algoritmo exacto y las instrucciones clínicas de extracción para DeepSeek
-# no se exponen en este repositorio público para proteger la propiedad intelectual.
-[REDACTED: Proprietary clinical data extraction and analysis instructions]
+[SYSTEM_PROMPT_OMITIDO_POR_SEGURIDAD]
 """
 
 # Constantes de seguridad para sanitización de mensajes
 MAX_MESSAGE_LENGTH = 2000  # Máximo de caracteres por mensaje
 MAX_MESSAGES_HISTORY = 20  # Máximo de mensajes en el historial
 
-# Cliente AsyncOpenAI singleton — antes se creaba uno nuevo POR CADA mensaje
+# Cliente AsyncOpenAI singleton
 _http_client = httpx.AsyncClient(
     timeout=httpx.Timeout(60.0, connect=10.0),
     limits=httpx.Limits(max_connections=10, max_keepalive_connections=5),
